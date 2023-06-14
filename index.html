@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>TicTacToe</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                TicTacToe
+            </li>
+        </ul>
+    </nav>
+
+    <div class="gameContainer">
+        <div class="game">
+            <div class="box-top">
+                <div class="box" style="border-left: none;border-top: none"></div>
+                <div class="box" style="border-top: none"></div>
+                <div class="box" style="border-right: none;border-top: none"></div>
+            </div>
+            <div class="box-middle">
+                <div class="box" style="border-left: none;"></div>
+                <div class="box"></div>
+                <div class="box"style="border-right: none;"></div>
+            </div>
+            <div class="box-bottom">
+                <div class="box" style="border-left: none;border-bottom: none"></div>
+                <div class="box" style="border-bottom: none"></div>
+                <div class="box" style="border-right: none;border-bottom: none"></div>
+            </div>
+        </div>
+        <div class="reset">
+            <button onclick="Reset()" id="reset">Reset</button>
+        </div>
+    </div>
+
+</body>
+<script>
+    var start = "X"
+    var turn = "X"
+    var gameover = false
+    let boxes = document.querySelectorAll(".box")
+    var reset = document.querySelector(".reset")
+    reset.style.display = "none"
+
+    boxes.forEach((box)=>{
+        box.addEventListener("click",()=>{
+            if(box.innerHTML == "" && !gameover){
+                let next_turn
+                if(turn == "X"){
+                    next_turn  = "0"
+                    box.innerHTML = "X"
+                    turn = "0"
+                }
+                else{
+                    next_turn  = "X"
+                    box.innerHTML = "0"
+                    turn = "X"
+                }
+                var index = Array.prototype.indexOf.call(boxes, box);
+                checkwin(index)
+            }
+        })
+    })
+
+    function Reset(){
+        boxes.forEach((box)=>{
+            box.innerHTML = ""
+        })
+        if(start == "X"){
+            start = "0"
+            turn = "0"
+        }
+        else{
+            start = "X"
+            turn = "X"
+        }
+        reset.style.display = "none"
+        gameover = false
+    }
+
+    const checkwin = (index) =>{
+        win = {
+            0 : [[0,1,2],[0,3,6],[0,4,8]],
+            1 : [[0,1,2],[1,4,7]],
+            2 : [[0,1,2],[2,5,8],[2,4,6]],
+            3 : [[0,3,6],[3,4,5]],
+            4 : [[3,4,5],[1,4,7],[0,4,8],[2,4,6]],
+            5 : [[2,5,8],[3,4,5]],
+            6 : [[0,3,6],[6,7,8],[2,4,6]],
+            7 : [[1,4,7],[6,7,8]],
+            8 : [[2,5,8],[6,7,8],[0,4,8]]
+        }
+        win[index].forEach((check)=>{
+            if(boxes[check[0]].innerHTML === boxes[check[1]].innerHTML && boxes[check[1]].innerHTML === boxes[check[2]].innerHTML && boxes[check[0]].innerHTML !=""){
+                winner = boxes[check[0]].innerHTML  
+                gameover = true              
+                blink(boxes[check[0]],winner)
+                blink(boxes[check[1]],winner)
+                blink(boxes[check[2]],winner)
+                reset.style.display = "grid"
+            }
+        })
+    }
+
+    const blink =(element,winner)=>{
+        let x = 0
+        var intervalId =setInterval(function() {
+            element.innerHTML = (element.innerHTML == '' ? winner : '');
+            x++;
+            if(x === 6){
+                window.clearInterval(intervalId)
+            }
+        }, 100);
+    }
+
+</script>
+</html>
